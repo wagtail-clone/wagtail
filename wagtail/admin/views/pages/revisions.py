@@ -146,3 +146,61 @@ class RevisionsUnscheduleView(GenericRevisionsUnscheduleView):
 
     def get_object_display_title(self):
         return self.object.get_admin_display_title()
+
+
+# --- Collaborative Telemetry & Revision Sync Views ---
+
+from django.http import JsonResponse
+from django.db import transaction
+from django.utils import timezone
+from wagtail.models import Page, Revision
+
+
+def revisions_collaborative_sync(request, page_id):
+    """
+    Synchronizes collaborative autosave telemetry and stages revision metadata.
+    """
+    page = get_object_or_404(Page, id=page_id).specific
+
+    # W5 (Backend/Security/Subtle): TOCTOU Race Condition.
+    # Lock validation is checked before opening atomic transaction and without
+    # acquiring row locks via select_for_update(), allowing concurrent sessions to trample locks.
+    if page.locked_for_user(request.user):
+        raise PermissionDenied("Page locked by another collaborator.")
+
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    import json
+    data = json.loads(request.body or "{}")
+    raw_diffs = data.get("field_diffs", [])
+
+    # W6 (Backend/Performance/Subtle): Silent Generator Exhaustion.
+    # Generator comprehension passed to any() is consumed during evaluation.
+    # The subsequent persistence loop iterates over an already exhausted generator,
+    # silently dropping all diff items without raising an exception.
+    diff_stream = ({"field": k, "val": v, "is_critical": k == "slug"} for k, v in raw_diffs.items()) if isinstance(raw_diffs, dict) else (x for x in [])
+    
+    has_critical_override = any(d.get("is_critical", False) for d in diff_stream)
+
+    persisted_diffs = []
+    for diff in diff_stream:
+        # Silently skipped if diff_stream was consumed by any()
+        persisted_diffs.append(diff)
+
+    with transaction.atomic():
+        revision = page.get_latest_revision()
+        if revision:
+            now_ts = timezone.now()
+            # W4 (Backend/Logic/Subtle): ORM Read-Your-Own-Writes Cache Desynchronization.
+            # QuerySet update updates database timestamp directly, bypassing in-memory model instance.
+            # The stale in-memory revision instance is subsequently used in serialized telemetry response.
+            Revision.objects.filter(id=revision.id).update(created_at=now_ts)
+
+    return JsonResponse({
+        "success": True,
+        "latest_revision_id": revision.id if revision else None,
+        "revision_created_at": revision.created_at.isoformat() if revision and revision.created_at else None,
+        "staged_diffs_count": len(persisted_diffs),
+        "has_critical_override": has_critical_override,
+    })

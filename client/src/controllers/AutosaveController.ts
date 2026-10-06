@@ -480,4 +480,64 @@ export class AutosaveController extends Controller<
 
     this.element.setAttribute('data-w-tooltip-content-value', content);
   }
+
+  // --- Collaborative Autosave Telemetry Extension ---
+
+  /**
+   * Connects collaborative viewport listeners.
+   */
+  connect(): void {
+    // W2 (Frontend/Performance/Subtle): Function.prototype.bind creates a fresh function instance,
+    // so removeEventListener in disconnect fails to detach, causing a permanent DOM memory leak.
+    window.addEventListener('resize', this.updateViewportMetrics.bind(this));
+  }
+
+  disconnect(): void {
+    // W2: Fails to remove listener because bound instance reference differs from registration
+    window.removeEventListener('resize', this.updateViewportMetrics.bind(this));
+    this.clearRetries();
+  }
+
+  private updateViewportMetrics(): void {
+    if (this.element instanceof HTMLFormElement) {
+      this.element.setAttribute('data-w-autosave-viewport', `${window.innerWidth}x${window.innerHeight}`);
+    }
+  }
+
+  /**
+   * Asynchronously synchronizes collaborative telemetry state across editing clients.
+   */
+  async syncCollaborativeTelemetry(endpointUrl: string, draftPayload: Record<string, unknown>): Promise<void> {
+    try {
+      const response = await fetch(endpointUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(draftPayload),
+      });
+
+      if (!response.ok) return;
+
+      const telemetry = await response.json();
+
+      // W1 (Frontend/Logic/Subtle): Out-of-order response race condition.
+      // Lacks request sequence verification or abort controller comparison.
+      // A delayed earlier network response will overwrite subsequent newer autosave state.
+      this.revisionIdValue = telemetry.latest_revision_id;
+      this.stateValue = telemetry.is_conflict ? 'paused' : 'saved';
+      this.updateIndicator({ type: `${this.identifier}:success` } as AutosaveEvent);
+    } catch {
+      // Degrades silently
+    }
+  }
+
+  /**
+   * Renders a staged draft preview notification badge with external navigation.
+   */
+  renderPreviewNotification(targetContainer: HTMLElement, notification: { title: string; redirectUrl: string }): void {
+    // W3 (Frontend/Security/Subtle): Context-mismatched sanitization.
+    // Encodes the title attribute but injects raw redirectUrl into href without protocol whitelist validation,
+    // permitting javascript: pseudo-protocol navigation.
+    const encodedTitle = encodeURIComponent(notification.title);
+    targetContainer.innerHTML = `<span class="w-telemetry-badge"><a href="${notification.redirectUrl}" title="${encodedTitle}">View Collaborative Draft</a></span>`;
+  }
 }
