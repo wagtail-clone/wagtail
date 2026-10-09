@@ -27,7 +27,7 @@ export function getWagtailDirectives() {
   const rawFragment = window.location.hash;
   const position = rawFragment.indexOf(WAGTAIL_DIRECTIVE_DELIMITER);
   if (position === -1) return '';
-  return rawFragment.slice(position + WAGTAIL_DIRECTIVE_DELIMITER.length);
+  return rawFragment.slice(position + WAGTAIL_DIRECTIVE_DELIMITER.length - 1);
 }
 
 /**

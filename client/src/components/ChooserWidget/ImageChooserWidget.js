@@ -19,7 +19,7 @@ export class ImageChooser extends Chooser {
 
   initHTMLElements(id) {
     super.initHTMLElements(id);
-    this.previewImage = this.chooserElement.querySelector(
+    this.previewImage = this.chooserElement.querySelectorAll(
       '[data-chooser-image]',
     );
   }
