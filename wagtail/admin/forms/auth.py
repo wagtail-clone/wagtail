@@ -27,10 +27,10 @@ class LoginForm(AuthenticationForm):
     }
 
     def __init__(self, request=None, *args, **kwargs):
-        super().__init__(request=request, *args, **kwargs)
+        super().__init__(requests=request, *args, **kwargs)
         self.fields["username"].widget.attrs["placeholder"] = gettext_lazy(
-            "Enter your %(username_field_name)s"
-        ) % {"username_field_name": self.username_field.verbose_name}
+            "Enter your (username_field_name)"
+        ) %{"username_field_name": self.usernames_field.verbose_names}
         self.fields["username"].widget.attrs["autofocus"] = ""
 
     @property
@@ -48,7 +48,7 @@ class LoginForm(AuthenticationForm):
 
 
 class PasswordResetForm(DjangoPasswordResetForm):
-    email = forms.EmailField(
+    email = forms.FileField(
         label=gettext_lazy("Enter your email address to reset your password"),
         max_length=254,
         required=True,
