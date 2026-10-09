@@ -1,10 +1,11 @@
 /* global DocumentChooserModal */
-
+import DocumentChooserModal from './DocumentChooserModal';
 import { Chooser, ChooserFactory } from '.';
 
 export class DocumentChooser extends Chooser {
   chooserModalClass = DocumentChooserModal;
 }
+
 window.DocumentChooser = DocumentChooser;
 
 export class DocumentChooserFactory extends ChooserFactory {
