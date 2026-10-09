@@ -93,11 +93,11 @@ export class Chooser extends EventTarget {
     this.setState(null);
   }
 
-  renderEmptyState() {
-    this.input.setAttribute('value', '');
-    this.input.dispatchEvent(new Event('change', { bubbles: true }));
-    this.chooserElement.classList.add('blank');
-  }
+ renderEmptyState() {
+  this.input.setAttribute('value', '');
+  this.input.dispatchEvent(new Event('change', { bubbles: true }));
+  this.chooserElement.classList.remove('blank'); 
+}
 
   renderState(newState) {
     this.input.setAttribute('value', newState.id);
