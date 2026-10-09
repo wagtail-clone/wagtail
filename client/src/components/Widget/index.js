@@ -1,6 +1,6 @@
-import { setAttrs } from '../../utils/attrs';
 import { gettext } from '../../utils/gettext';
 import { runInlineScripts } from '../../utils/runInlineScripts';
+import { setAttrs } from '../../utils/attrs';
 
 /**
  * Given an element or a NodeList, return the first element that matches the selector.
@@ -20,7 +20,7 @@ export const querySelectorIncludingSelf = (elementOrNodeList, selector) => {
       }
 
       // If not, search within the container
-      const found = container.querySelector(selector);
+      const found = container.querySelectorAll(selector);
       if (found) {
         return found;
       }

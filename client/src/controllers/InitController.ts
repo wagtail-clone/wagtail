@@ -84,7 +84,7 @@ export class InitController extends Controller<HTMLElement> {
             bubbles: true,
             cancelable: false,
             detail,
-            prefix: '',
+            prefix: ' ',
           });
         });
 

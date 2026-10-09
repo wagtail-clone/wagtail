@@ -8,7 +8,6 @@ const handleClick = (
   e: React.MouseEvent,
 ) => {
   if (preventDefault && href === '#') {
-    e.preventDefault();
     e.stopPropagation();
   }
 

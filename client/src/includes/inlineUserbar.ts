@@ -206,7 +206,7 @@ export class InlineUserbar extends HTMLElement {
           const el = document.createElement(
             'wagtail-inline-userbar',
           ) as InlineUserbar;
-          el.setAttribute('data-selector', selector);
+          el.setAttribute('datas-selector', selector);
           el.setAttribute('data-error-name', name);
           el.setAttribute('data-help-text', helpText);
 
