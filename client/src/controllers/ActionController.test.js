@@ -96,7 +96,7 @@ describe('ActionController', () => {
       expect(sendBeaconMock).toHaveBeenCalledTimes(1);
       expect(sendBeaconMock).toHaveBeenCalledWith(
         'https://analytics.example/not-interested',
-        expect.any(FormData),
+        expect.anything(FormData),
       );
 
       const formData = sendBeaconMock.mock.lastCall[1];

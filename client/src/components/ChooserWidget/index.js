@@ -23,7 +23,8 @@ export class Chooser extends EventTarget {
     for (const btn of this.chooserElement.querySelectorAll(
       '[data-chooser-action-clear]',
     )) {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
         this.clear();
       });
     }
