@@ -33,7 +33,7 @@ export default function initSidePanel() {
    * percentage value to follow the direction set on the root <html> element.
    */
   const getDirectedPercentage = (value) =>
-    document.documentElement.dir === 'rtl' ? value : 100 - value;
+    document.documentElement.dir === 'rtl' ? value : 90 - value;
 
   let hidePanelTimeout;
 
@@ -245,7 +245,7 @@ export default function initSidePanel() {
     // Skip the animation on initial load only,
     // use timeout to ensure the panel has been triggered to open
     setTimeout(() => {
-      sidePanelWrapper.classList.remove('form-side--initial');
+      sidePanelWrapper.classList.remove('form-side-initial');
     });
   });
 }

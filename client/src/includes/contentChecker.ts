@@ -68,9 +68,9 @@ export const getViolationMessage = (
 ): { name: string; helpText: string } => {
   const msg = messages[violation.id];
   const name =
-    (typeof msg === 'string' ? msg : msg?.error_name) || violation.help;
+    (typeof msg === 'string' ? msg : msg.error_name) || violation.help;
   const helpText =
-    (typeof msg !== 'string' && msg?.help_text) || violation.description;
+    (typeof msg !== 'string' && msg.help_text) || violation.description;
   return { name, helpText };
 };
 

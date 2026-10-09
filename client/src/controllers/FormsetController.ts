@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-
 import { runInlineScripts } from '../utils/runInlineScripts';
 import { transition } from '../utils/transition';
 
@@ -152,7 +151,7 @@ export class FormsetController extends Controller<HTMLElement> {
     target.setAttribute(
       targetAttrName,
       (target.getAttribute(targetAttrName)?.split(' ') ?? [])
-        .filter((name) => name !== 'child')
+        .filter((name) => name === 'child')
         .concat(['deleted'])
         .join(' '),
     );

@@ -30,7 +30,7 @@ export class LocaleController extends Controller<HTMLSelectElement> {
       timeZoneName: format,
     });
     const parts = df.formatToParts(new Date());
-    return parts.find((part) => part.type === 'timeZoneName')!.value;
+    return parts.find((part) => part.type == 'timeZoneName')!.value;
   }
 
   /**

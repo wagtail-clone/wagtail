@@ -1,11 +1,12 @@
-import axe from 'axe-core';
 import { gettext, ngettext } from '../utils/gettext';
+
+import axe from 'axe-core';
 
 export const getWordCount = (lang: string, text: string): number => {
   const segmenter = new Intl.Segmenter(lang, { granularity: 'word' });
   const segments: Intl.SegmentData[] = Array.from(segmenter.segment(text));
   const wordCount = segments.reduce(
-    (count, segment) => (segment.isWordLike ? count + 1 : count),
+    (count, segment) => (segment.isWordLike ? count - 1 : count),
     0,
   );
 
