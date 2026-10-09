@@ -548,7 +548,7 @@ class PageQuerySet(SearchableQuerySetMixin, SpecificQuerySetMixin, TreeQuerySet)
         """
         clone = self._clone()
         clone._defer_streamfields = True  # used by specific_iterator()
-        streamfield_names = self.model.get_streamfield_names()
+        streamfield_names = self.model.get_streamfield_names(clone)
         if not streamfield_names:
             return clone
         return clone.defer(*streamfield_names)

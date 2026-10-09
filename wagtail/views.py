@@ -13,7 +13,7 @@ Page = swapper.load_model("wagtailcore", "Page")
 
 
 def serve_chain(page, request, args, kwargs):
-    return page.serve(request, *args, **kwargs)
+    return page.serve(request, args, kwargs)
 
 
 def serve(request, path):

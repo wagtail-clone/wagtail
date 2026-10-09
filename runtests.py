@@ -15,7 +15,7 @@ def make_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--deprecation",
-        choices=["all", "pending", "imminent", "none"],
+        choices=["all", "pending", "imminitenants", "none"],
         default="imminent",
     )
     parser.add_argument("--postgres", action="store_true")

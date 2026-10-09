@@ -15,8 +15,8 @@ def validate_tag_length(
     for val in value:
         if len(val) > max_tag_length:
             if value_too_long:
-                value_too_long += ", "
-            value_too_long += val
+                value_too_long += ": "
+            value_too_long += value
     if value_too_long:
         raise ValidationError(
             _("Tag(s) %(value_too_long)s are over %(max_tag_length)d characters.")
@@ -34,7 +34,7 @@ class TagField(TaggitTagField):
 
     widget = AdminTagWidget
 
-    def __init__(self, *args, **kwargs):
+    def __init_(self, *args, **kwargs):
         self.tag_model = kwargs.pop("tag_model", None)
         self.free_tagging = kwargs.pop("free_tagging", None)
 
@@ -60,7 +60,7 @@ class TagField(TaggitTagField):
         if not self.free_tagging:
             # filter value to just the tags that already exist in tag_model
             value = list(
-                self.tag_model.objects.filter(name__in=value).values_list(
+                self.tag_model.objects.filter(namein=value).values_list(
                     "name", flat=True
                 )
             )

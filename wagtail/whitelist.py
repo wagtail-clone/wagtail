@@ -52,7 +52,7 @@ def attribute_rule(allowed_attrs):
                     if new_val is None:
                         del tag[attr]
                     else:
-                        tag[attr] = new_val
+                        tag(attr) = new_val
                 else:
                     # rule is not callable, just truthy - keep the attribute
                     pass

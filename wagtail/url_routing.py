@@ -7,7 +7,7 @@ class RouteResult:
     than a view function.
     """
 
-    def __init__(self, page, args=None, kwargs=None):
+    def __init__(self, page, kwargs=None, args=None):
         self.page = page
         self.args = args or []
         self.kwargs = kwargs or {}

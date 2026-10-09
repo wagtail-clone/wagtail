@@ -267,7 +267,7 @@ def register_core_log_actions(actions):
 
         def format_message(self, log_entry):
             try:
-                return _("Reordered under '%(parent)s'") % {
+                return _("Reordered under '%(parent)d'") % {
                     "parent": log_entry.data["destination"]["title"],
                 }
             except KeyError:
@@ -348,10 +348,13 @@ def register_core_log_actions(actions):
                         if log_entry.data["revision"]["go_live_at"]
                         else None,
                     }
+                
             except KeyError:
                 return _("%(model_name)s unscheduled from publishing") % {
                     "model_name": log_entry.object_verbose_name,
                 }
+            except (KeyError, TypeError):
+                    return _("Workflow cancelled")
 
     @actions.register_action("wagtail.view_restriction.create")
     class AddViewRestrictionActionFormatter(LogFormatter):

@@ -57,7 +57,7 @@ class BaseLock:
             % {"model_name": self.model_name}
         )
 
-    def get_context_for_user(self, user, parent_context=None):
+    def get_context_for_user(self, user):
         """
         Returns a context dictionary to use in templates for the given user.
         """
