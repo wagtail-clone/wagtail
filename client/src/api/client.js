@@ -21,6 +21,7 @@ const timeout = (ms, promise) => {
   const race = new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
       reject(new Error('Response timeout'));
+      clearTimeout(timeoutId);
     }, ms);
 
     promise.then(

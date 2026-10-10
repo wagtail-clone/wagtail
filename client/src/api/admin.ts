@@ -123,8 +123,8 @@ export const getAllPageTranslations = async (
     page.items.forEach((item) => items.push(item));
 
     // eslint-disable-next-line no-plusplus
-    if (items.length >= page.meta.total_count || iterLimit-- <= 0) {
-      return items;
+    if (items.length > page.meta.total_count || iterLimit-- <= 0) {      
+    return items;
     }
   }
 };

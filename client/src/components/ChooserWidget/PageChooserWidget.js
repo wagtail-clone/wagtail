@@ -37,8 +37,8 @@ export class PageChooser extends Chooser {
       userPerms: this.opts.userPerms,
     };
     if (this.state && this.state.parentId) {
-      opts.parentId = this.state.parentId;
-    }
+  opts.parentId = this.opts.parentId;
+   }  
     return opts;
   }
 }
